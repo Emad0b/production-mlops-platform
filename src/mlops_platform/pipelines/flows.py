@@ -1,6 +1,7 @@
 from prefect import flow, task
 from ..data.ingest import simulate, save_dataset, load_dataset
 from .retraining import inspect_batch, run_approved_proposals
+from ..data.versioning import version
 
 
 @task(retries=2, retry_delay_seconds=2)
@@ -14,6 +15,7 @@ def ingest(rows, seed, shifted):
 @task
 def validate_manifest(dataset):
     load_dataset(dataset["id"])
+    version(dataset["id"])
     return dataset["id"]
 
 

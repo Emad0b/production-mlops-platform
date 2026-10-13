@@ -10,7 +10,11 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(root / "src"))
 os.environ["MLOPS_ENABLE_FAULT_INJECTION"] = "1"
-os.environ.setdefault("PREFECT_HOME", str(root / "runtime/prefect"))
+os.environ.setdefault(
+    "PREFECT_HOME",
+    str(Path(os.getenv("MLOPS_HOME", str(root / "runtime"))) / "prefect"),
+)
+Path(os.environ["PREFECT_HOME"]).mkdir(parents=True, exist_ok=True)
 os.environ.setdefault("PREFECT_SERVER_ANALYTICS_ENABLED", "false")
 from mlops_platform.config import MODEL_NAME, FEATURES
 from mlops_platform.storage import state, model, db, sql, audit

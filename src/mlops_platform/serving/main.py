@@ -34,6 +34,10 @@ DRIFT = Gauge(
     "Features that exceeded the most recent drift threshold",
 )
 CANARY = Gauge("mlops_platform_canary_active", "A canary deployment is active")
+DEGRADED = Gauge(
+    "mlops_platform_performance_degraded",
+    "Recent labeled champion quality exceeded retraining thresholds",
+)
 logger = logging.getLogger("mlops_platform.requests")
 
 app = FastAPI(title="ForgeOps / Predictive Maintenance", version="0.1.0")
@@ -80,6 +84,23 @@ def metrics():
         ).fetchone()
     if latest:
         DRIFT.set(sum(f["drifted"] for f in json.loads(latest[0])["features"]))
+    champion = state("champion")
+    measured = performance(champion) if champion else None
+    from ..pipelines.retraining import POLICY
+
+    degraded = False
+    if (
+        measured
+        and measured["status"] == "measured"
+        and measured["metrics"]["samples"] >= POLICY["min_labeled_samples"]
+    ):
+        current = measured["metrics"]
+        baseline = model(champion)["metrics"]
+        degraded = (
+            current["recall"] < baseline["recall"] - POLICY["max_recall_drop"]
+            or current["brier"] > baseline["brier"] + POLICY["max_brier_increase"]
+        )
+    DEGRADED.set(degraded)
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
@@ -408,8 +429,12 @@ async def ingest_csv(request: __import__("fastapi").Request):
         if len(data) > 5_000_000:
             raise HTTPException(413, "CSV exceeds the 5 MB limit")
     try:
-        return save_dataset(
+        manifest = save_dataset(
             pd.read_csv(BytesIO(data)), {"source": "authenticated-csv-ingestion"}
         )
+        from ..data.versioning import version
+
+        version(manifest["id"])
+        return manifest
     except Exception as error:
         raise HTTPException(422, f"CSV validation failed: {type(error).__name__}")

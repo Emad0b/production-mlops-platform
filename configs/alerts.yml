@@ -1,6 +1,11 @@
 groups:
   - name: model-lifecycle
     rules:
+      - alert: ModelPerformanceDegraded
+        expr: mlops_platform_performance_degraded == 1
+        for: 1m
+        labels: {severity: warning}
+        annotations: {summary: "Recent labeled champion quality requires retraining review"}
       - alert: FeatureDriftDetected
         expr: mlops_platform_drifted_features >= 2
         for: 1m

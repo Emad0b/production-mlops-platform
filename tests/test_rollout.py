@@ -89,3 +89,34 @@ def test_drift_proposal_cooldown_and_unapproved_data():
     with pytest.raises(ValueError, match="approved"):
         train_proposal(review["proposal"])
     assert state("champion") == champion["id"]
+
+
+def test_recent_labeled_degradation_triggers_without_feature_drift():
+    champion = model(state("champion"))
+    # Latest 500 wrong, labeled predictions replace older good observations.
+    with db() as conn:
+        for i in range(500):
+            actual = i % 2
+            risk = 0.01 if actual else 0.99
+            sql(
+                conn,
+                "INSERT INTO predictions VALUES (?,?,?,?,?,?,?,?)",
+                (
+                    str(uuid.uuid4()),
+                    champion["id"],
+                    "{}",
+                    risk,
+                    1 - actual,
+                    actual,
+                    1,
+                    time.time() + i,
+                ),
+            )
+    review = inspect_batch(champion["dataset"], champion["dataset"])
+    assert not review["report"]["drift_detected"]
+    assert review["triggered"]
+    from mlops_platform.pipelines.retraining import proposals
+
+    proposal = next(p for p in proposals() if p["id"] == review["proposal"])
+    assert "Delayed-label recall degraded" in proposal["reason"]
+    assert "Delayed-label calibration degraded" in proposal["reason"]
