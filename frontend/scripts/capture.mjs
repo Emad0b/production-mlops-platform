@@ -1,0 +1,11 @@
+import {chromium} from '@playwright/test';
+import {mkdir} from 'node:fs/promises';
+const browser=await chromium.launch();
+const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
+await page.goto(process.env.PREVIEW_URL||'http://127.0.0.1:5176');
+await page.getByText('API connected').waitFor();
+await mkdir('../docs',{recursive:true});
+await page.screenshot({path:'../docs/overview.png',fullPage:true});
+await page.getByRole('button',{name:'Release control',exact:true}).click();
+await page.screenshot({path:'../docs/release-control.png',fullPage:true});
+await browser.close();

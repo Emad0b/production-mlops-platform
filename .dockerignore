@@ -1,0 +1,11 @@
+.git
+.env
+.deps
+.package-test
+.venv
+runtime
+test-mlops_platform-*
+frontend/node_modules
+frontend/dist
+frontend/test-results
+docs/recordings

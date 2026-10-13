@@ -1,0 +1,1 @@
+{"minimum_drifted_features":2,"min_labeled_samples":50,"max_recall_drop":0.1,"max_brier_increase":0.05,"cooldown_seconds":3600,"auto_train_approved_data":true}

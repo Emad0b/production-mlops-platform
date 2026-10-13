@@ -1,0 +1,136 @@
+{
+  "synthetic_traffic": true,
+  "inprocess_calls_not_http_benchmark": true,
+  "candidate": {
+    "id": "c7fa5b31-767a-4c1a-9172-36527ebdd4ca",
+    "kind": "logistic",
+    "dataset": "09864e1c00cbc61ce513baefa66de987e365972d06fd23ca7b10c790d8d5c78a",
+    "run_id": "3e521d7f835c49299c42510d7c5d1bab",
+    "registry_version": "5",
+    "metrics": {
+      "pr_auc": 0.9014088731976252,
+      "precision": 0.7474747474747475,
+      "recall": 0.9487179487179487,
+      "f1": 0.8361581920903954,
+      "brier": 0.15988364365871954,
+      "confusion_matrix": [
+        [
+          34,
+          50
+        ],
+        [
+          8,
+          148
+        ]
+      ],
+      "samples": 240,
+      "failure_rate": 0.65
+    },
+    "validation": {
+      "pr_auc": 0.896049980701027,
+      "precision": 0.7538461538461538,
+      "recall": 0.9483870967741935,
+      "f1": 0.84,
+      "brier": 0.16535261774571228,
+      "confusion_matrix": [
+        [
+          37,
+          48
+        ],
+        [
+          8,
+          147
+        ]
+      ],
+      "samples": 240,
+      "failure_rate": 0.6458333333333334
+    },
+    "threshold": 0.41,
+    "schema_version": "sensor-v1",
+    "created": 1791884070.5442958
+  },
+  "checks": {
+    "passed": false,
+    "ready": true,
+    "reasons": [
+      "Canary calibration exceeds policy",
+      "Canary PR-AUC regressed against the concurrent champion cohort"
+    ],
+    "candidate_requests": 30,
+    "error_rate": 0.0,
+    "p95_ms": 7.890299952123314,
+    "cohort_metrics": {
+      "c7fa5b31-767a-4c1a-9172-36527ebdd4ca": {
+        "pr_auc": 0.7813754020126569,
+        "precision": 0.6538461538461539,
+        "recall": 0.9444444444444444,
+        "f1": 0.7727272727272727,
+        "brier": 0.22166832330343875,
+        "confusion_matrix": [
+          [
+            3,
+            9
+          ],
+          [
+            1,
+            17
+          ]
+        ],
+        "samples": 30,
+        "failure_rate": 0.6
+      },
+      "5e068d3e-92f6-4f59-9a88-b6c4b6487f9a": {
+        "pr_auc": 0.9353977107423656,
+        "precision": 0.7301587301587301,
+        "recall": 1.0,
+        "f1": 0.8440366972477065,
+        "brier": 0.14887571790618953,
+        "confusion_matrix": [
+          [
+            7,
+            34
+          ],
+          [
+            0,
+            92
+          ]
+        ],
+        "samples": 133,
+        "failure_rate": 0.6917293233082706
+      }
+    },
+    "waiting_for": null
+  },
+  "rollout": {
+    "id": "5cb22950-6de8-43bb-b4d0-423cb3d81292",
+    "candidate": "c7fa5b31-767a-4c1a-9172-36527ebdd4ca",
+    "champion": "5e068d3e-92f6-4f59-9a88-b6c4b6487f9a",
+    "status": "aborted",
+    "fraction": 0.2,
+    "policy": {
+      "canary_fraction": 0.2,
+      "min_requests": 30,
+      "min_labels": 30,
+      "max_error_rate": 0.02,
+      "max_p95_ms": 250,
+      "min_recall": 0.6,
+      "min_precision": 0.3,
+      "max_brier": 0.18,
+      "max_pr_auc_regression": 0.03,
+      "require_label_performance": true
+    },
+    "decision": {
+      "passed": false,
+      "reasons": [
+        "Canary calibration exceeds policy",
+        "Canary PR-AUC regressed against the concurrent champion cohort"
+      ],
+      "action": "candidate traffic disabled; champion retained"
+    },
+    "created": 1791884158.7590313
+  },
+  "requests": 163,
+  "champion_before": "5e068d3e-92f6-4f59-9a88-b6c4b6487f9a",
+  "champion_after": "5e068d3e-92f6-4f59-9a88-b6c4b6487f9a",
+  "note": "Same live safety thresholds as the API; no thresholds relaxed for the demo."
+}

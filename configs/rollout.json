@@ -1,0 +1,1 @@
+{"canary_fraction":0.2,"min_requests":30,"min_labels":30,"max_error_rate":0.02,"max_p95_ms":250,"min_recall":0.6,"min_precision":0.3,"max_brier":0.18,"max_pr_auc_regression":0.03,"require_label_performance":true}
