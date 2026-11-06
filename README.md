@@ -1,5 +1,7 @@
 # ForgeOps — End-to-End MLOps Platform
 
+ForgeOps demonstrates how a team can take a machine-learning model from training to live use. Use it to track experiments, spot changes in incoming data, try a new model on a small share of traffic, and roll back a poor release.
+
 [![CI](https://github.com/Emad0b/production-mlops-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/Emad0b/production-mlops-platform/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB)
 ![React](https://img.shields.io/badge/React-TypeScript-3178C6)
